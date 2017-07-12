@@ -51,15 +51,20 @@ def get_service_url(request, redirect_to=None):
     return service
 
 
-def get_cas_client(service_url=None):
+def get_cas_client(service_url=None, request=None):
     """
     initializes the CASClient according to
     the CAS_* settigs
     """
+    server_url = django_settings.CAS_SERVER_URL
+    if not server_url and request:
+        server_url = "https://" + request.META['HTTP_HOST'] + "/cas/"
+    assert server_url, "settings.CAS_SERVER_URL required."
+
     return CASClient(
         service_url=service_url,
         version=django_settings.CAS_VERSION,
-        server_url=django_settings.CAS_SERVER_URL,
+        server_url=server_url,
         extra_login_params=django_settings.CAS_EXTRA_LOGIN_PARAMS,
         renew=django_settings.CAS_RENEW,
         username_attribute=django_settings.CAS_USERNAME_ATTRIBUTE,

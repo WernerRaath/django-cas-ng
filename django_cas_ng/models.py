@@ -52,7 +52,7 @@ class ProxyGrantingTicket(models.Model):
             )
         else:
             service_url = get_service_url(request)
-            client = get_cas_client(service_url=service_url)
+            client = get_cas_client(service_url=service_url, request=request)
             try:
                 return client.get_proxy_ticket(pgt, service)
             # change CASError to ProxyError nicely

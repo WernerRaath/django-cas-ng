@@ -130,7 +130,7 @@ def logout(request, next_page=None):
         redirect_url = urllib_parse.urlunparse(
             (protocol, host, next_page, '', '', ''),
         )
-        client = get_cas_client()
+        client = get_cas_client(request=request)
         return HttpResponseRedirect(client.get_logout_url(redirect_url))
     else:
         # This is in most cases pointless if not CAS_RENEW is set. The user will
@@ -143,7 +143,7 @@ def logout(request, next_page=None):
 def callback(request):
     """Read PGT and PGTIOU sent by CAS"""
     if request.method == 'POST' and request.POST.get('logoutRequest'):
-        clean_sessions(get_cas_client(), request)
+        clean_sessions(get_cas_client(request=request), request)
         return HttpResponse("{0}\n".format(_('ok')), content_type="text/plain")
     elif request.method == 'GET':
         pgtid = request.GET.get('pgtId')
