@@ -57,8 +57,9 @@ def get_cas_client(service_url=None, request=None):
     the CAS_* settigs
     """
     server_url = django_settings.CAS_SERVER_URL
-    if not server_url and request:
-        server_url = "https://" + request.META['HTTP_HOST'] + "/cas/"
+    if server_url and request:
+        if server_url.startswith('/'):
+            server_url = request.scheme + "://" + request.META['HTTP_HOST'] + server_url
     assert server_url, "settings.CAS_SERVER_URL required."
 
     return CASClient(
