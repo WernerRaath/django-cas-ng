@@ -39,7 +39,8 @@ __all__ = ['login', 'logout', 'callback']
 def login(request, next_page=None, required=False):
     """Forwards to CAS login URL or verifies CAS ticket"""
     service_url = get_service_url(request, next_page)
-    client = get_cas_client(service_url=service_url)
+    client = get_cas_client(request=request,
+                            service_url=service_url)
 
     if not next_page and settings.CAS_STORE_NEXT and 'CASNEXT' in request.session:
         next_page = request.session['CASNEXT']
